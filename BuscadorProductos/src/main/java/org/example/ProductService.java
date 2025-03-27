@@ -5,8 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class ProductService {
+    private static final Logger LOGGER = Logger.getLogger(ProductService.class.getName());
     private BinarySearchTree<Product> bst;
 
     public ProductService() {
@@ -19,24 +21,32 @@ public class ProductService {
             boolean firstLine = true;
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
-                    if (line.toLowerCase().contains("sku")) {
-                        firstLine = false;
-                        continue;
-                    }
                     firstLine = false;
+                    continue;
                 }
                 String[] tokens = line.split(",");
-                if (tokens.length < 5) continue;
-                String sku = tokens[0].trim();
-                double priceRetail = Double.parseDouble(tokens[1].trim());
-                double priceCurrent = Double.parseDouble(tokens[2].trim());
-                String productName = tokens[3].trim();
-                String category = tokens[4].trim();
+                if (tokens.length < 19) continue;
+
+                String category = tokens[0].trim();
+                String sku = tokens[6].trim();
+                String priceRetailStr = tokens[9].trim();
+                String priceCurrentStr = tokens[10].trim();
+                String productName = tokens[18].trim();
+
+                if (priceRetailStr.equals("") || priceCurrentStr.equals("")) {
+                    continue;
+                }
+
+                double priceRetail = Double.parseDouble(priceRetailStr);
+                double priceCurrent = Double.parseDouble(priceCurrentStr);
+
                 Product product = new Product(sku, priceRetail, priceCurrent, productName, category);
                 bst.insert(product);
             }
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
+            LOGGER.severe("Error al leer el archivo: " + e.getMessage());
+        } catch (NumberFormatException e) {
+        LOGGER.severe("Error al convertir un número: " + e.getMessage());
         }
     }
 
