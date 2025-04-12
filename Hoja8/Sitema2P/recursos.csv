@@ -1,0 +1,5 @@
+Recurso, Cantidad, CostoUnitario
+Enfermera, 2, 2500
+Doctor, 2, 6000
+EquipoRayosX, 1, 10000
+EquipoLaboratorio, 1, 8000
